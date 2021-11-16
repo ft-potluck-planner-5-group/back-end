@@ -18,4 +18,12 @@ router.get('/:potluck_id', restricted, (req, res, next) => {
         .catch(next)
 })
 
+router.post('/', restricted, (req, res, next) => {
+    Potlucks.add(req.body)
+        .then(newPotluck => {
+            res.json(newPotluck)
+        })
+        .catch(next)
+})
+
 module.exports = router
