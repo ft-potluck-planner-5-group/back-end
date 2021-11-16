@@ -5,7 +5,7 @@ function find() {
 }
 
 function findBy(filter) {
-    return db('users').where(filter)
+    return db('users').where(filter).select('*')
 }
 
 function findById(user_id) {
@@ -13,7 +13,7 @@ function findById(user_id) {
 }
 
 async function add(newUser) {
-    const [user] = await db('users').insert(newUser)
+    const [user] = await db('users').insert(newUser, ['user_id', 'username'])
     return user
 }
 

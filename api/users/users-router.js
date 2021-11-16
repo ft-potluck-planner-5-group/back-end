@@ -5,21 +5,22 @@ const { checkUsernameFree, checkUsernameExists } = require('../auth/auth-middlew
 const { JWT_SECRET } = require('../secrets')
 const Users = require('./users-model')
 
-router.post('/register', checkUsernameFree, (req, res, next) => {
+router.post('/register', 
+    checkUsernameFree,
+    async (req, res, next) => {
     const { username, password } = req.body
     const rounds = process.env.BCRYPT_ROUNDS || 8
     const hash = bcrypt.hashSync(password, rounds)
-    Users.add({ username, password: hash })
-        .then(newUser => {
-            res.status(201).json({
-                user: newUser.user,
-                username: newUser.username
-            })
+    const newUser = await Users.add({ username, password: hash })
+        res.status(201).json({
+            user_id: newUser.user_id,
+            username: newUser.username
         })
-        .catch(next)
 })
 
-router.post('/login', checkUsernameExists, (req, res, next) => {
+router.post('/login', 
+    checkUsernameExists, 
+    (req, res, next) => {
     if (bcrypt.compareSync(req.body.password, req.user.password)) {
         const token = tokenBuilder(req.user)
         res.json({

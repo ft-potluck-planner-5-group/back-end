@@ -2,7 +2,7 @@ exports.up = async (knex) => {
   await knex.schema
     .createTable('organizers', table => {
       table.increments('organizer_id')
-      table.string('organizer_username', 200).notNullable()
+      table.string('organizer_username', 200).notNullable().unique()
       table.string('organizer_password', 200).notNullable()
     })
     .createTable('potlucks', table => {
@@ -13,7 +13,6 @@ exports.up = async (knex) => {
       table.string('location', 200)
       table.integer('organizer_id')
         .unsigned()
-        .notNullable()
         .references('organizer_id')
         .inTable('organizers')
         .onDelete('restrict')
@@ -21,12 +20,10 @@ exports.up = async (knex) => {
     })
     .createTable('users', table => {
       table.increments('user_id')
-      table.string('username', 200).notNullable()
+      table.string('username', 200).notNullable().unique()
       table.string('password', 200).notNullable()
-      table.boolean('isGoing').defaultTo(false)
       table.integer('potluck_id')
         .unsigned()
-        .notNullable()
         .references('potluck_id')
         .inTable('potlucks')
         .onDelete('restrict')
@@ -37,14 +34,22 @@ exports.up = async (knex) => {
       table.string('item_name', 200).notNullable()
       table.integer('potluck_id')
         .unsigned()
-        .notNullable()
         .references('potluck_id')
         .inTable('potlucks')
         .onDelete('restrict')
         .onUpdate('restrict')
       table.integer('user_id')
         .unsigned()
-        .notNullable()
+        .references('user_id')
+        .inTable('users')
+        .onDelete('restrict')
+        .onUpdate('restrict')
+    })
+    .createTable('going', table => {
+      table.increments('going_id')
+      table.boolean('isGoing').defaultTo(false)
+      table.integer('user_id')
+        .unsigned()
         .references('user_id')
         .inTable('users')
         .onDelete('restrict')
@@ -53,6 +58,7 @@ exports.up = async (knex) => {
 }
 
 exports.down = async (knex) => {
+  await knex.schema.dropTableIfExists('going')
   await knex.schema.dropTableIfExists('items')
   await knex.schema.dropTableIfExists('users')
   await knex.schema.dropTableIfExists('potlucks')
