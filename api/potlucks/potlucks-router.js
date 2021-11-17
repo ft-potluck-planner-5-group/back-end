@@ -20,6 +20,9 @@ router.get('/:potluck_id', restricted, (req, res, next) => {
 
 router.post('/', restricted, (req, res, next) => {
     Potlucks.add(req.body)
+        .then(({potluck_id}) => {
+            return Potlucks.findById(potluck_id)
+        })
         .then(newPotluck => {
             res.json(newPotluck)
         })
