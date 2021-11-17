@@ -29,4 +29,15 @@ router.post('/', restricted, (req, res, next) => {
         .catch(next)
 })
 
+router.post('/:potluck_id/items', restricted, (req, res, next) => {
+    const item = req.body
+    const { potluck_id } = req.params
+
+    Potlucks.addItem(potluck_id, item)
+        .then(items => {
+            res.json(items)
+        })
+        .catch(next)
+})
+
 module.exports = router
