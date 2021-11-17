@@ -11,6 +11,8 @@ exports.up = async (knex) => {
       table.string('date', 200).notNullable()
       table.string('time', 200)
       table.string('location', 200)
+      table.string('imageUrl', 500)
+      table.string('instructions', 200)
       table.integer('organizer_id')
         .unsigned()
         .references('organizer_id')

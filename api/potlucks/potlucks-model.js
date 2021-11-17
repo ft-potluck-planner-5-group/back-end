@@ -9,7 +9,7 @@ function findById(potluck_id) {
 }
 
 async function add(newPotluck) {
-    const [potluck] = await db('potlucks').insert(newPotluck, ['potluck_id', 'potluck_name', 'date', 'time', 'location'])
+    const [potluck] = await db('potlucks').insert(newPotluck, ['potluck_id', 'potluck_name', 'date', 'time', 'location', 'imageUrl', 'instructions'])
     return potluck
 }
 
